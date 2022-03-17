@@ -76,14 +76,12 @@ h1 {
 <br>
 
 - 原理分析
-  - 序列化
-  - 增量快照
+  - 记录
+    - 页面序列化
+    - 增量变化记录
   - 回放
-  - 沙盒
-  - 高精度计时器
 - 实战
   - 示例演示
-  - 插件系统
 - 总结
 
 ---
@@ -103,13 +101,16 @@ RRWeb 的实现原理可以简单概括为。记录**页面的快照**和**发�
 
 ---
 
-# 页面的序列化和反序列化
-
-也可以称之为**页面快照的生成和复现**
+# 页面快照及序列化
 
 <v-click>
 
 ### 方案一：复制 DOM
+
+<br>
+
+<div class="flex gap-20px items-center">
+<div class="flex-1">
 
 ```js
 // record
@@ -118,15 +119,27 @@ const snapshot = $("body").clone();
 $("body").replaceWith(snapshot);
 ```
 
-#### 缺陷
+</div>
 
-- 快照的数据类型无法作为网络信息传递内容传递
+<div class="flex-1">
+
+- **缺陷** - 快照的数据类型无法在网络传递
+
+</div>
+</div>
 
 </v-click>
 
 <v-click>
 
+<br>
+
 ### 方案二：记录 HTML
+
+<br>
+
+<div class="flex gap-20px items-center">
+<div class="flex-1">
 
 ```js
 // record
@@ -135,9 +148,14 @@ const snapshot = $("body").innerHTML;
 $("body").innerHTML = snapshot;
 ```
 
-#### 缺陷
+</div>
 
-- 会遗漏一些重要的信息，如 `input` 内用户输入的内容
+<div class="flex-1">
+
+- **缺陷** - 会遗漏一些重要的信息，如 `input` 内用户输入的内容
+
+</div>
+</div>
 
 </v-click>
 
@@ -145,7 +163,7 @@ $("body").innerHTML = snapshot;
 
 # 自定义序列化
 
-也可以理解为使用自定义 DSL 去记录页面内容
+使用自定义 DSL 去记录页面内容
 
 ### 相对 HTML 的特殊处理
 <br>
@@ -159,6 +177,7 @@ $("body").innerHTML = snapshot;
 
 ---
 layout: two-cols
+clicks: 6
 ---
 
 <div class="pr-10px">
@@ -209,4 +228,132 @@ layout: two-cols
 
 ---
 
-# 增量快照
+# 增量变化记录
+
+前文提到，RRWeb 的基本策略是记录 “快照” + “变化行为”，然后复现整个页面的过程，而这一块要分享的就是 RRWeb 是如何记录页面变化的。
+
+<v-click>
+
+<div class="text-14px">
+
+- DOM 变动
+  - 节点创建、销毁
+  - 节点属性变化
+  - 文本变化
+- 鼠标移动
+- 鼠标交互
+  - mouse up、mouse down
+  - click、double click、context menu
+  - focus、blur
+  - touch start、touch move、touch end
+- 页面或元素滚动
+- 视窗大小改变
+- 输入
+- ...canvas/iframe/WebGL
+
+</div>
+
+</v-click>
+
+---
+
+# DOM 变动
+
+<v-click>
+
+[MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) 接口提供了监视对DOM树所做更改的能力。它被设计为旧的Mutation Events功能的替代品，该功能是DOM3 Events规范的一部分。
+
+<v-click>
+
+## 注意点
+
+**MutationObserver** 的触发方式是**批量且异步**的，这就会导致我们试图记录一些视图变化行为的时候可能会有歧义，同时也有了一系列优化的空间。RRWeb 专门对这些歧义做了细致地处理。
+
+1. 新增节点
+   1. 防止重复新增 DOM，需要对每个新增行为对应的 DOM 的子孙节点进行校验。
+2. 删除节点
+   1. 当新增 DOM 和删除 DOM 的 Mutation 在一个批次中的时候需要进行先后顺序的记录。
+3. 属性的高频变化优化
+   1. 只取其一个批次变化中的终态
+
+</v-click>
+
+</v-click>
+
+---
+
+# 输入行为
+
+<div v-click-hide="2">
+
+<v-click>
+
+### 人为输入
+
+对 `<input>`, `<textarea>`, `<select>` 三种元素的输入行为进行监听。
+
+</v-click>
+
+</div>
+
+<v-after at="2">
+
+<div style="margin-top: -89px">
+
+### 程序输入
+
+```ts
+function hookSetter<T>(
+  target: T,
+  key: string | number | symbol,
+  d: PropertyDescriptor,
+): hookResetter {
+  const original = Object.getOwnPropertyDescriptor(target, key);
+  Object.defineProperty(target, key, {
+    set(value) {
+      // put hooked setter into event loop to avoid of set latency
+      setTimeout(() => {
+        d.set!.call(this, value);
+      }, 0);
+      if (original && original.set) {
+        original.set.call(this, value);
+      }
+    },
+  });
+  return () => hookSetter(target, key, original || {});
+}
+```
+
+</div>
+
+</v-after>
+
+---
+
+# 回放
+
+RRWeb 默认使用 iframe 来渲染回放的内容
+
+### 一些难点及解决方案
+
+<br>
+
+- 高精度计时器
+  <!-- - `requestAnimationFrame` -->
+- `hover` 的模拟
+  <!-- - 无法直接用程序触发 `hover` 伪类
+  - 将 `hover` 相关的伪类样式转成 `.hover` 的 class 样式
+  - 使用 `mouseup` 和 `mousedown` 判断是否 `hover`，并添加对应 class -->
+- 跨域资源访问问题
+
+---
+
+# 实战
+
+---
+
+# 总结
+
+- [statcounter](https://statcounter.com/)
+- [Sentry](https://sentry.io/welcome/)
+- 产品星球
