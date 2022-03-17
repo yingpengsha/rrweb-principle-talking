@@ -5,7 +5,7 @@ theme: seriph
 # like them? see https://unsplash.com/collections/94734566/slidev
 background: https://source.unsplash.com/collection/94734566/1920x1080
 # apply any windi css classes to the current slide
-class: 'text-center'
+class: "text-center"
 # https://sli.dev/custom/highlighters.html
 highlighter: shiki
 # show line numbers in code blocks
@@ -21,7 +21,7 @@ drawings:
   persist: false
 ---
 
-# RRWeb 回放录制功能原理分享
+# RRWeb 页面录制功能原理分享
 
 <div class="pt-12">
   <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
@@ -29,43 +29,32 @@ drawings:
   </span>
 </div>
 
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
-    class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
-
 ---
 
-# What is Slidev?
+# What is RRWeb?
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - theme can be shared and used with npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embedding Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - anything possible on a webpage
+RRWeb 是 'record and replay the web' 的简写，旨在利用现代浏览器所提供的强大 API 录制并回放任意 web 界面中的用户操作。
 
 <br>
 <br>
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+- 🧑‍💻 **用户行为分析** - 像素级地还原用户在页面上的行为，可以更好的理解用户并优化用户体验。
+- 🛠 **缺陷复现** - 可以在保持一致性的情况下异步的复现并调试缺陷，这可以帮助开发者更好的修复缺陷。
+- 🎥 **更智慧的录制方式** - RRWeb 并非以视频录制的方式记录页面行为，而是用一种更轻量级的方式做到像素级的记录。
+- 🕙 **实时分享** - 借助 RRWeb 的能力，你可以更方便的分享你页面上发生的事情。
 
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/guide/syntax#embedded-styles
--->
+<br>
+<br>
+<br>
+
+<div class="flex gap-5px text-32px">
+  <a href="https://github.com/rrweb-io/rrweb" target="_blank">
+    <radix-icons:github-logo />
+  </a>
+  <a href="https://www.rrweb.io/" target="_blank">
+    <gis:earth-america-o />
+  </a>
+</div>
 
 <style>
 h1 {
@@ -83,299 +72,141 @@ h1 {
 
 # Navigation
 
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
+<br>
+<br>
 
-### Keyboard Shortcuts
-
-|     |     |
-| --- | --- |
-| <kbd>right</kbd> / <kbd>space</kbd>| next animation or slide |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd> | previous slide |
-| <kbd>down</kbd> | next slide |
-
-<!-- https://sli.dev/guide/animations.html#click-animations -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
+- 原理分析
+  - 序列化
+  - 增量快照
+  - 回放
+  - 沙盒
+  - 高精度计时器
+- 实战
+  - 示例演示
+  - 插件系统
+- 总结
 
 ---
 layout: image-right
-image: https://source.unsplash.com/collection/94734566/1920x1080
+image: https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1718&q=80
 ---
 
-# Code
-
-Use code snippets and get the highlighting directly![^1]
-
-```ts {all|2|1-6|9|all}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
-
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = {...user, ...update}  
-  saveUser(id, newUser)
-}
-```
-
-<arrow v-click="3" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<style>
-.footnotes-sep {
-  @apply mt-20 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="-t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-preload: false
----
-
-# Animations
-
-Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
-```
-
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# LaTeX
-
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
+# 引言
 
 <br>
 
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
+RRWeb 的实现原理可以简单概括为。记录**页面的快照**和**发生在视图上的变化**，并配合其自身的序列化和反序列化规则重现用户在页面上的行为。
 
 <br>
 
-[Learn more](https://sli.dev/guide/syntax#latex)
+举一个相对恰当的例子 🌰，页面上的元素是**演员和道具**，一段时间内页面上发生的一系列试图变化则是**剧本**。只要演员能够严苛的按照剧本演出，这场话剧就能在任何时间、任何地点进行表演并保持一样的效果。
 
 ---
 
-# Diagrams
+# 页面的序列化和反序列化
 
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
+也可以称之为**页面快照的生成和复现**
 
-<div class="grid grid-cols-3 gap-10 pt-4 -mb-6">
+<v-click>
 
-```mermaid {scale: 0.5}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
+### 方案一：复制 DOM
+
+```js
+// record
+const snapshot = $("body").clone();
+// replay
+$("body").replaceWith(snapshot);
 ```
 
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
+#### 缺陷
+
+- 快照的数据类型无法作为网络信息传递内容传递
+
+</v-click>
+
+<v-click>
+
+### 方案二：记录 HTML
+
+```js
+// record
+const snapshot = $("body").innerHTML;
+// replay
+$("body").innerHTML = snapshot;
 ```
 
-```plantuml {scale: 0.7}
-@startuml
+#### 缺陷
 
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
+- 会遗漏一些重要的信息，如 `input` 内用户输入的内容
 
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
+</v-click>
 
-cloud {
-  [Example 1]
-}
+---
 
+# 自定义序列化
 
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
+也可以理解为使用自定义 DSL 去记录页面内容
 
+### 相对 HTML 的特殊处理
+<br>
 
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
+- **去脚本化** - 被录制页面中的所有 JavaScript 都不应该被执行。
+- **记录没有反映在 HTML 中的视图状态** - 例如 `<input type="text" />` 输入后的值不会反映在其 HTML 中，而是通过 value 属性记录。
+- **相对路径转换为绝对路径** - 因为回放时的环境 99% 与录制时不同。
+- **尽量记录 CSS 样式表的内容** - 将外联样式表转换为内联样式表，防止回放环境导致样式崩塌。
 
-@enduml
+是否应该让更多的外部资源变成内联资源？
+
+---
+layout: two-cols
+---
+
+<div class="pr-10px">
+
+```html {all|1,5|2,4|3|3|3|all} {at:0}
+<html>
+<body>
+  <input type="text" />
+</body>
+</html>
 ```
 
 </div>
 
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
+::right::
 
+<div class="pl-10px">
+
+```json {all|2-5|7-10|12-19|17|21-23|all} {at:0}
+{
+  "id": 1,
+  "type": "Element",
+  "tagName": "html",
+  "attributes": {},
+  "childNodes": [{
+    "id": 2,
+    "type": "Element",
+    "tagName": "body",
+    "attributes": {},
+    "childNodes": [{
+      "id": 3,
+      "type": "Element",
+      "tagName": "input",
+      "attributes": {
+        "type": "text",
+        "value": "input string"
+      },
+      "childNodes": []
+    },{ 
+      "id": 4, 
+      "type": "Text",
+      "textContent": "\n    "
+    }
+...
+```
+
+</div>
 
 ---
-layout: center
-class: text-center
----
 
-# Learn More
-
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
+# 增量快照

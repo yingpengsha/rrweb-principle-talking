@@ -10,5 +10,11 @@
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*"
   },
-  "name": "rrweb-principle-talking"
+  "name": "rrweb-principle-talking",
+  "devDependencies": {
+    "@iconify-json/dashicons": "^1.1.1",
+    "@iconify-json/fa": "^1.1.1",
+    "@iconify-json/gis": "^1.1.1",
+    "@iconify-json/radix-icons": "^1.1.2"
+  }
 }

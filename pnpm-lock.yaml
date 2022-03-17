@@ -1,6 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@iconify-json/dashicons': ^1.1.1
+  '@iconify-json/fa': ^1.1.1
+  '@iconify-json/gis': ^1.1.1
+  '@iconify-json/radix-icons': ^1.1.2
   '@slidev/cli': ^0.28.10
   '@slidev/theme-default': '*'
   '@slidev/theme-seriph': '*'
@@ -9,6 +13,12 @@ dependencies:
   '@slidev/cli': 0.28.10
   '@slidev/theme-default': 0.21.2
   '@slidev/theme-seriph': 0.21.2
+
+devDependencies:
+  '@iconify-json/dashicons': 1.1.1
+  '@iconify-json/fa': 1.1.1
+  '@iconify-json/gis': 1.1.1
+  '@iconify-json/radix-icons': 1.1.2
 
 packages:
 
@@ -58,15 +68,38 @@ packages:
       '@iconify/types': 1.0.12
     dev: false
 
+  /@iconify-json/dashicons/1.1.1:
+    resolution: {integrity: sha512-Ka60gFQeVNDvt8zjtcex0jZeVV3Q6R61X0nNfzmmplkuqHZbxxDQHPYejaabC07oPdksh2fuM3R/mGB1QAubew==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
+  /@iconify-json/fa/1.1.1:
+    resolution: {integrity: sha512-/j8U2vbuD8OdY21wue9Q1a7m9NNWvQ6UT4Ey4P41rlqwFZnDVWAGkYlUP4T19BmOZdY7M+odXiDwKksgA1RkBg==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
+  /@iconify-json/gis/1.1.1:
+    resolution: {integrity: sha512-5xEGqejYZMf4QuHngMS9aoiLb3jq5Af8yoPHhfg3mDO6xk5K2rktQEjRPH81c9bI0C7zWWpJkms7O1Y5FSMOSA==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
   /@iconify-json/ph/1.1.1:
     resolution: {integrity: sha512-sIHTY+c1F8x29BM49IqoccJ3T8mvVXPcrE4WOpJ3GsBaip2YqFJRYU60rw64UL6GEI13vWSD7NsZKq8ytTO87g==}
     dependencies:
       '@iconify/types': 1.0.12
     dev: false
 
+  /@iconify-json/radix-icons/1.1.2:
+    resolution: {integrity: sha512-paHtKXWyf/OCGYdB+r85+/xqinV/mVbi9YH1rWygdYc3Y2wf0SlUA7RibifMWcS7SevjfKH2Wy0xX4XtZ0gfyQ==}
+    dependencies:
+      '@iconify/types': 1.0.12
+    dev: true
+
   /@iconify/types/1.0.12:
     resolution: {integrity: sha512-6er6wSGF3hgc1JEZqiGpg21CTCjHBYOUwqLmb2Idzkjiw6ogalGP0ZMLVutCzah+0WB4yP+Zd2oVPN8jvJ+Ftg==}
-    dev: false
 
   /@iconify/utils/1.0.24:
     resolution: {integrity: sha512-SxnUyoLqlB2HGncZIFgZsR3O7gvpdwODi7A7J7udKAXTAkA8ZzQ7cG/PzBuGWA7s67VJtKFyl/scGZB8c759qQ==}
