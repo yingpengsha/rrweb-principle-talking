@@ -300,33 +300,45 @@ clicks: 6
 
 <div style="margin-top: -89px">
 
-### 程序输入
-
 ```ts
-function hookSetter<T>(
+export function hookSetter<T>(
   target: T,
   key: string | number | symbol,
   d: PropertyDescriptor,
+  isRevoked?: boolean,
+  win = window,
 ): hookResetter {
-  const original = Object.getOwnPropertyDescriptor(target, key);
-  Object.defineProperty(target, key, {
-    set(value) {
-      // put hooked setter into event loop to avoid of set latency
-      setTimeout(() => {
-        d.set!.call(this, value);
-      }, 0);
-      if (original && original.set) {
-        original.set.call(this, value);
-      }
+  const original = win.Object.getOwnPropertyDescriptor(target, key);
+  win.Object.defineProperty(
+    target,
+    key,
+    isRevoked ? d: {
+      set(value) {
+        // put hooked setter into event loop to avoid of set latency
+        setTimeout(() => {
+          d.set!.call(this, value);
+        }, 0);
+        if (original && original.set) {
+          original.set.call(this, value);
+        }
+      },
     },
-  });
-  return () => hookSetter(target, key, original || {});
+  );
+  return () => hookSetter(target, key, original || {}, true);
 }
 ```
 
 </div>
 
 </v-after>
+
+---
+
+# 其他内容
+
+- Canvas
+- WebGL
+- IFrame
 
 ---
 
