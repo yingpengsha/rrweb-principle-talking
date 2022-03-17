@@ -21,7 +21,7 @@ drawings:
   persist: false
 ---
 
-# RRWeb 页面录制功能原理分享
+# RRWeb 页面录制及回放实现分享
 
 <div class="pt-12">
   <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
